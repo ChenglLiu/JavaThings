@@ -1,1 +1,1 @@
-# This is somethings for JAVA
+# This is somethings for JAVA to learn
