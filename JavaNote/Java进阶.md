@@ -2208,4 +2208,150 @@ public static void main(String[] args) {
 + 在运行时获取泛型方法
 + 在运行时调用任意一个对象的成员变量和方法
 + 在运行时处理注解
-+ 生成动态代理
++ 生成**动态**代理
+
+
+
+```java
+/*通过Java反射机制得到类的包名和类名*/
+public static void Demo01() {
+    Person person = new Person();
+    System.out.println("Demo01：包名：" + person.getClass().getPackage().getName() +
+                       ", 完整类名：" + person.getClass().getName());
+}
+
+/*证所有的类都是Class类的实例对象*/
+public static void Demo02() throws ClassNotFoundException {
+    /*定义两个未知类型的Class，并赋值为null*/
+    Class<?> class1 = null;
+    Class<?> class2 = null;
+
+    /*写法一，可能抛异常*/
+    class1 = Class.forName("Reflection.ReflectionMechanism.Person");
+    System.out.println("Demo02(写法一)包名：" + class1.getPackage().getName() +
+                       ", 完整类名：" + class1.getName());
+
+    /*写法二*/
+    class2 = Person.class;
+    System.out.println("Demo02(写法二)包名：" + class1.getPackage().getName() +
+                       ", 完整类名：" + class1.getName());
+}
+
+/*   * 通过java反射机制，用Class创建类对象
+     * java反射的意义所在*/
+public static void Demo03() throws ClassNotFoundException, IllegalAccessException,
+InstantiationException {
+    Class<?> class1 = null;
+    class1 = Class.forName("Reflection.ReflectionMechanism.Person");
+    /*实例化类Person，不能带参数，必须选择无参构造函数*/
+    Person person = (Person)class1.newInstance();
+    person.setAge(23);
+    person.setName("Torking");
+    System.out.println("Demo03：" + person.getName() + " : " + person.getAge());
+}
+
+/*通过java反射机制得到一个类的构造函数，并实现创建带参实例对象*/
+public static void Demo04() throws ClassNotFoundException, IllegalAccessException,
+InvocationTargetException, InstantiationException {
+    Class<?> class1 = null;
+    Person person1 = null;
+    Person person2 = null;
+
+    class1 = Class.forName("Reflection.ReflectionMechanism.Person");
+    /*得到构造函数的集合*/
+    Constructor<?>[] constructors = class1.getConstructors();
+    person1 = (Person)constructors[0].newInstance();
+    person1.setAge(23);
+    person1.setName("PlusTorking");
+
+    person2 = (Person)constructors[1].newInstance(23, "Accepted");
+    System.out.println("Demo04：" + person1.getAge() + " : " + person1.getName() + ", " +
+                       person2.getAge() + " : " + person2.getName());
+}
+
+/*通过java反射机制操作成员变量，set get*/
+public static void Demo05() throws ClassNotFoundException, IllegalAccessException,
+InstantiationException, NoSuchFieldException {
+    Class<?> class1 = null;
+    class1 = Class.forName("Reflection.ReflectionMechanism.Person");
+    Object obj = class1.newInstance();
+
+    Field personNameField = class1.getDeclaredField("name");
+    personNameField.setAccessible(true);
+    personNameField.set(obj, "胖虎先森");
+
+    System.out.println("Demo05修改后的属性的值：" + personNameField.get(obj));
+}
+
+/*通过Java反射机制得到类的一些属性： 继承的接口，父类，函数信息，成员信息，类型等*/
+public static void Demo06() throws ClassNotFoundException {
+    Class<?> class1 = null;
+    class1 = Class.forName("Reflection.ReflectionMechanism.SuperMan");
+
+    //获取父类名称
+    Class<?> superClass = class1.getSuperclass();
+    System.out.println("Demo06: superMan类的父类名：" + superClass.getName());
+
+    Field[] fields = class1.getDeclaredFields();
+    for (Field field : fields) {
+        System.out.println("类的成员：" + field);
+    }
+    System.out.println("+++++++++++++++++");
+
+    //取得类方法
+    Method[] methods = class1.getDeclaredMethods();
+    for (int i=0; i<methods.length; i++) {
+        System.out.println("Demo06，取得superMan类的方法：");
+        System.out.println("函数名：" + methods[i].getName());
+        System.out.println("函数返回类型：" + methods[i].getReturnType());
+        System.out.println("函数访问修饰符：" + Modifier.toString(methods[i].getModifiers()));
+        System.out.println("函数代码写法：" + methods[i]);
+    }
+    System.out.println("+++++++++++++++++");
+
+    //取得类实现的接口，因为接口类也属于Class,所以得到接口中的方法也是一样的方法得到
+    Class<?>[] interfaces = class1.getInterfaces();
+    for (int i=0; i<interfaces.length; i++) {
+        System.out.println("实现的接口类名：" + interfaces[i].getName());
+    }
+}
+
+/*通过Java反射机制调用类方法*/
+public static void Demo07() throws ClassNotFoundException, NoSuchMethodException,
+IllegalAccessException, InstantiationException, InvocationTargetException {
+    Class<?> class1 = null;
+    class1 = Class.forName("Reflection.ReflectionMechanism.SuperMan");
+
+    System.out.println("Demo07：调用无参方法fly(): ");
+    Method method = class1.getMethod("fly");
+    method.invoke(class1.newInstance());
+
+    System.out.println("Demo07：调用有参方法walk(int m): ");
+    method = class1.getMethod("walk", int.class);       //walk, 参数
+    method.invoke(class1.newInstance(), 100);
+}
+
+/*通过java反射机制得到类加载信息*/
+public static void Demo08() throws ClassNotFoundException {
+    Class<?> class1 = null;
+    class1 = Class.forName("Reflection.ReflectionMechanism.SuperMan");
+    String name = class1.getClassLoader().getClass().getName();
+
+    System.out.println("Demo08：类加载器名：" + name);
+}
+```
+
+
+
+#### 2）``java.lang.Class``类
+
++ 类的加载过程：
+
+  > 程序经过``java.exe``命令后，生成一个或多个字节码文件(``.class``)，用``java.exe``命令对字节码文件解释运行——类的加载
+
++ 运行时类：
+
+  > 加载到内存中的类，称为运行时类，作为Class的一个实例
+  >
+  > Class的实例对应着一个运行时类
+

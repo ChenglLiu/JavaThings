@@ -750,8 +750,8 @@ public static void printMax(double... numbers) {
   ```java
   Customer customer = new Customer();
   
-  System.out.println(customer);			//JavaDemo.OOP.Polymorphic.Example03.Student@3ac61
-  System.out.println(customer.toString());		//JavaDemo.OOP.Polymorphic.Example03.Student@3ac61
+  System.out.println(customer);			//JavaFundament.OOP.Polymorphic.Example03.Student@3ac61
+  System.out.println(customer.toString());		//JavaFundament.OOP.Polymorphic.Example03.Student@3ac61
   ```
 
   1. ``Object类``
