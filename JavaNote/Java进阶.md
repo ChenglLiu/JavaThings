@@ -1968,7 +1968,7 @@ public void client() {
         while ((len1 = fis.read(buffer1)) != -1) {		//read:
             os.write(buffer1, 0, len1);
         }
-//        outputStream.write("你好，这里是0101".getBytes());
+//        os.write("你好，这里是0101".getBytes());
         
         //5.关闭数据的输出
         socket.shutdownOutput();
@@ -2003,6 +2003,8 @@ public void client() {
     }
 }
 ```
+
+
 
 ```java
 //服务端
@@ -2351,7 +2353,199 @@ public static void Demo08() throws ClassNotFoundException {
 
 + 运行时类：
 
-  > 加载到内存中的类，称为运行时类，作为Class的一个实例
+  > - 加载到内存中的类，称为运行时类，作为Class的一个实例
   >
-  > Class的实例对应着一个运行时类
+  > - Class的实例对应着一个运行时类
+  >
+  > - 加载到内存的运行时类，会缓存一段时间，在此时间内可以通过不同的获取方式获取此运行时类（Calss）
+
+
+
+#### 3）*获取* Class实例的方式
+
++ 方式一：调用运行时类的属性
+
+```java
+Class class1 = Person.class;
+System.out.println(class1);
+Object obj = class1.getInstance();		//获取运行时类的对象
+```
+
+
+
++ 方式二：通过运行时类的对象
+
+```java
+Person person = new Person();
+Class class2 = person.getClass();
+```
+
+
+
++ 方式三：调用Class的静态方法：``forName(String classPath)``，更好的体现了动态性
+
+```java
+//会抛异常
+Class class3 = Class.forName("Reflection.ReflectionMechanism.Person");
+```
+
+
+
++ 方式四：使用类的加载器
+
+```java
+ClassLoader classLoader = ReflectionTest.class.getClassLoader();
+Class class4 = classLoader.loadClass("Reflection.ReflectionMechanism.Person");
+```
+
+```java
+System.out.println(class1 == class2);		//true
+System.out.println(class1 == class3);		//true
+System.out.println(class1 == class4);		//true
+//虽然获取的方式不一样，但获取的是同一个运行时类，即Class对应一个运行时类
+```
+
+
+
++ 能够获取Class实例
+  1. class
+  2. interface：接口
+  3. []：数组：只要类型和维度一样，就是同一个class
+  4. enum：枚举
+  5. annotation：注解@interface
+  6. primitive：基本数据类型
+  7. void
+
+
+
+#### 4）类的加载器
+
+```java
+//使用系统类的加载器
+ClassLoader classLoader = DemoTest03.class.getClassLoader();
+System.out.println(classLoader);
+
+//调用系统类的加载器的getParent()：获取扩展类加载器
+ClassLoader classLoader1 = classLoader.getParent();
+System.out.println(classLoader1);
+
+//无法获取引导类加载器，
+//引导类加载器负载加载java的核心类库，无法加载自定义类的
+ClassLoader classLoader2 = classLoader1.getParent();
+System.out.println(classLoader2);		//null
+ClassLoader classLoader3 = String.class.getClassLoader();
+System.out.println(classLoader3);		//null
+```
+
+
+
+#### 5）创建运行时类的对象
+
+```java
+/*
+* newInstance()：调用此方法，创建对应的运行时类对象，内部调用运行时类的     * ********空参构造器*********
+*/
+Class<Person> clazz = Person.class;
+Person obj = clazz.newInstance();
+```
+
+```java
+//获取运行时类父类的泛型
+@Test
+public void test03() {
+    Class clazz = SuperMan.class;
+    Type genericSuperclass = clazz.getGenericSuperclass();
+    ParameterizedType paramType = (ParameterizedType)genericSuperclass;
+    //获取泛型类型
+    Type[] actualTypeArguments = paramType.getActualTypeArguments();
+    System.out.println(actualTypeArguments[0].getTypeName());
+    System.out.println(((Class) actualTypeArguments[0]).getName());
+}
+
+//获取运行时类的接口
+@Test
+public void test04() {
+    Class clazz = Person.class;
+    try {
+        Class class1 = Class.forName("Reflection.ReflectionMechanism.Person");
+        Class[] interfaces = class1.getInterfaces();
+        for (Class c : interfaces) {
+            System.out.println(c);
+        }
+    } catch (ClassNotFoundException e) {
+        e.printStackTrace();
+    }
+
+    Class[] interfaces = clazz.getInterfaces();
+    for (Class c : interfaces) {
+        System.out.println(c);
+    }
+
+    Class[] interfaces1 = clazz.getSuperclass().getInterfaces();
+    for (Class c : interfaces1) {
+        System.out.println(c);
+    }
+}
+```
+
+
+
+#### 6）调用运行时类的指定结构
+
++ 获取指定的属性
+
+```java
+public void test01() throws Exception {
+    Class clazz = Person.class;
+
+    //创建运行时类的对象
+    Person person = (Person) clazz.newInstance();
+
+    //获取指定的属性****(需要声明为public)****
+    Field field = clazz.getField("id");
+
+    //设置当前属性的值
+    field.set(person, 1000);
+
+    //获取当前对象person的当前属性值
+    Object o = field.get(person);
+    System.out.println(o);
+
+    //throw Exception
+    /*
+    Field field1 = clazz.getField("salary");
+    field1.set(person, 20000.0);
+    Object o1 = field1.get(person);
+    System.out.println(o1);
+    */
+    
+    //获取指定的属性*****(至少为默认权限)******可以拿到name对象
+    Field name = clazz.getDeclaredField("name");
+    //没有设置setAccessible(true)则获取指定的属性*****(至少为默认权限)******
+ 	name.setAccessible(true);		//保证当前属性可访问即便private
+    name.set(person, "Plus");
+    Object o2 = name.get(person);
+}
+```
+
+
+
++ 获取指定的方法
+
+```java
+Class clazz = Person.class;
+Person p = (Person) clazz.newInstance();
+
+//参数1：方法名、参数2：形参列表
+Method method = clazz.getDeclaredMethod("show", String.class);
+//私有的方法需要setAccessible(true)
+show.setAccessible(true);
+//参数1：方法调用者、参数2：方法的实参（给形参赋值）
+//invoke的返回值为对应方法的返回值
+show.invoke(p, "CHN");
+```
+
+
+
+#### 7）动态代理
 

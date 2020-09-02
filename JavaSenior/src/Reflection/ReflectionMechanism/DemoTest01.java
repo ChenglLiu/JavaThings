@@ -1,6 +1,12 @@
 package Reflection.ReflectionMechanism;
 
+import org.junit.Test;
+
 import java.lang.reflect.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Scanner;
 
 /**
  * @Description java反射机制，把类、类的属性当成一个对象来操作
@@ -42,6 +48,29 @@ public class DemoTest01 {
         //Demo08()
         Demo08();
         System.out.println("_________________");
+
+        Class<?> clazz = Person.class;
+        Constructor constructor = clazz.getDeclaredConstructor(int.class, String.class);
+        constructor.setAccessible(true);
+        Person person = (Person) constructor.newInstance(23, "xiaoming");
+        System.out.println(person);
+    }
+
+    @Test
+    public void test() {
+        Date date = new Date(2020, 6, 1);
+        System.out.println(date.toString());
+        System.out.println(date.getTime());
+
+        SimpleDateFormat sdf = new SimpleDateFormat();
+        System.out.println(sdf.format(date));
+
+        String str = "2020-10-1";
+        try {
+            System.out.println(sdf.parse(str));
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
@@ -117,9 +146,14 @@ public class DemoTest01 {
         class1 = Class.forName("Reflection.ReflectionMechanism.Person");
         Object obj = class1.newInstance();
 
+        Person o = (Person)obj;
+        o.setAge(23);
+
         Field personNameField = class1.getDeclaredField("name");
         personNameField.setAccessible(true);
         personNameField.set(obj, "胖虎先森");
+
+        o.setName("静香");
 
         System.out.println("Demo05修改后的属性的值：" + personNameField.get(obj));
     }
@@ -199,6 +233,10 @@ class Person {
 
     public Person() {
     }
+
+//    private Person(String name) {
+//        this.name = name;
+//    }
 
     public Person(int age, String name) {
         this.age = age;
