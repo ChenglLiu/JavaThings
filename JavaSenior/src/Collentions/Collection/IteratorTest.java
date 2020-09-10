@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 public class IteratorTest {
     @Test
@@ -25,5 +26,17 @@ public class IteratorTest {
 //        while (iterator.next() != null) {
 //            System.out.println(iterator.next());
 //        }
+    }
+
+    @Test
+    public void test02() {
+        List<String> list = new ArrayList<>();
+        list.add("abc");
+        list.add("def");
+
+        Iterator iterator = list.iterator();
+        while (iterator.hasNext()) {
+            System.out.println(iterator.next());
+        }
     }
 }

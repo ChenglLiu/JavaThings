@@ -993,7 +993,7 @@ System.out.println(coll.contains(new String("Torking")));		//true
 System.out.println(coll.contains(new Person("Plus", 23)));		//false
 //7. containsAll(Collection coll)：判断形参coll中的所有元素是否都存在于当前集合中
 Collection c = Arrays.asList(123, 456);
-boolean flag = coll.contains(c);
+boolean flag = coll.containsAll(c);
       
 //8. remove():删除自定义类时，也要重写equals()才能成功
       
@@ -1076,7 +1076,7 @@ for (Object obj : c) {
 
   - 程序运行时，同一个对象多次调用``hashCode()``方法应返回相同的值
   - 当两个对象的``equals()``方法比较true时，两个对象的``hashCode()``方法的返回值也应相等
-  - 对象中用作``equals()``反法比较的Filed，都应用来计算hashCode值
+  - 对象中用作``equals()``方法比较的Filed，都应用来计算hashCode值
 
 + ``TreeSet``：按照添加**对象**的指定属性，进行**排序**
 
@@ -1173,7 +1173,7 @@ public int compareTo(Object o) {
             return this.name.compareTo(person.name);
         }
 
-        //            return this.name.compareTo(person.name);
+//      return this.name.compareTo(person.name);
     } else {
         throw new RuntimeException("输入类型不匹配...");
     }
@@ -2548,4 +2548,281 @@ show.invoke(p, "CHN");
 
 
 #### 7）动态代理
+
+```java
+interface Human {
+    String getBelief();
+
+    void eat(String food);
+}
+
+//被代理类
+class SuperMan implements Human {
+    @Override
+    public String getBelief() {
+        return "I believe i can fly!!!";
+    }
+
+    @Override
+    public void eat(String food) {
+        System.out.println("喜欢吃：" + food);
+    }
+}
+
+/**
+ * 代理类
+ * 实现动态代理，需要解决得问题：
+ * 1.如何根据加载到内存得被代理类，动态的创建一个代理类及其对象
+ * 当通过代理类的对象调用方法时，如何动态调用被代理类的同名方法
+ */
+class ProxyFactory {
+    //调用此方法，返回一个代理类的对象
+    public static Object getProxyInstance(Object obj) {     //obj:被代理类的对象
+        MyInvocationHandler handler = new MyInvocationHandler();
+        handler.bind(obj);
+        return Proxy.newProxyInstance(obj.getClass().getClassLoader(), obj.getClass().getInterfaces(), handler);
+    }
+}
+
+class MyInvocationHandler implements InvocationHandler {
+    private Object obj;     //赋值时，需要被代理类的对象
+    public void bind(Object obj) {
+        this.obj = obj;
+    }
+
+    //通过代理类的对象调用方法a时，会自动调用如下的invoke方法
+    //将被代理类要执行的方法a的功能声明在method
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        //method：代理类对象调用的方法，即为被代理类对象要调用的方法
+        //obj：被代理类的对象
+        Object returnValue = method.invoke(obj, args);
+        return returnValue;
+    }
+}
+
+public class ProxyTest {
+    public static void main(String[] args) {
+        SuperMan superMan = new SuperMan();
+        Human proxyInstance = (Human) ProxyFactory.getProxyInstance(superMan);
+
+        proxyInstance.getBelief();
+        proxyInstance.eat("Hamburger");
+    }
+}
+```
+
+
+
+
+
+## Java基础15
+
+### ``Lambda``表达式
+
+> 1. Lambda是一个匿名函数
+>
+> 2. 格式：
+>
+>    ->：lambda表达式
+>
+>    ->左边：lambda形参列表（接口中抽象方法的形参列表）
+>
+>    ->右边：lambda体（重写的抽象方法的方法体）
+>
+> 3. Lambda表达式的使用
+>
+>    + **->左边**：lambda形参列表的参数类型可以省略（自动类型推断），如果形参列表只有一个参数，可以省略()
+>    + **->右边**：lambda体应使用{}，若只有一条执行语句，可以省略{}，如果有return，必须去掉
+>
+> 4. Lambda表达式的*本质*：作为**接口的实例**
+
+```java
+//语法格式一：无参、无返回值
+public void test01() {
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            System.out.println("Aloha, World!!");
+        }
+    };
+    runnable.run();
+
+    System.out.println("***********Lambda表达式***********");
+    Runnable r = () -> System.out.println("Hello, World..");
+    r.run();
+}
+
+//语法格式二：Lambda需要一个参数，但是没有返回值
+public void test02() {
+    Consumer<String> consumer = new Consumer<String>() {
+        @Override
+        public void accept(String s) {
+            System.out.println(s);
+        }
+    };
+    consumer.accept("Ni Hao");
+
+    System.out.println("************Lambda表达式************");
+    Consumer<String> con = (String s) -> {
+        System.out.println(s);
+    };
+    con.accept("Aha...");
+    
+    /*语法格式三：数据类型可以省略，可以由编译器推断得出，称为“类型推断”*/
+    Consumer<String> c = (s) -> {
+        System.out.println(s);
+    };
+    c.accept("Hi......");
+}
+
+//语法格式三：数据类型可以省略，可以由编译器推断得出，称为“类型推断”
+public void test03() {
+    Comparator<Integer> comparator = new Comparator<Integer>() {
+        @Override
+        public int compare(Integer o1, Integer o2) {
+            return Integer.compare(o1, o2);
+        }
+    };
+    System.out.println(comparator.compare(12, 22));
+
+    System.out.println("-----------Lambda表达式-----------");
+    Comparator<Integer> com = (o1, o2) -> Integer.compare(o1, o2);
+    System.out.println(com.compare(12, 22));
+    
+    System.out.println("**************方法引用***********");
+    Comparator<Integer> comp = Integer :: compare;
+    System.out.println(comp.compare(17, 14));
+}
+```
+
+
+
+```java
+//语法格式四：Lambda若只需要一个参数时，参数的小括号可以省略
+public void test04() {
+    Consumer<String> consumer = (s) -> {
+        System.out.println(s);
+    };
+    consumer.accept("plus");
+
+    /*语法格式四：Lambda若只需要一个参数时，参数的小括号可以省略*/
+    Consumer<String> con = s -> {
+        System.out.println(s);
+    };
+    con.accept("torking");
+}
+
+//语法格式五：Lambda需要两个及以上的参数，多条执行语句，并且可以有返回值
+public void test05() {
+    Comparator<Integer> comparator = new Comparator<Integer>() {
+        @Override
+        public int compare(Integer o1, Integer o2) {
+            System.out.println(o1 - o2);
+            return o1.compareTo(o2);
+        }
+    };
+    System.out.println(comparator.compare(21, 13));
+
+    System.out.println("*************Lambda表达式***************");
+    Comparator<Integer> com = (o1, o2) -> {
+        System.out.println(o1 - o2);
+        return o1.compareTo(o2);
+    };
+    System.out.println(com.compare(21, 27));
+}
+
+//语法格式六：当Lambda只有一条语句，return和{}若有，都可以省略
+public void test06() {
+    Comparator<Integer> comparator = (o1, o2) -> {
+        return Integer.compare(o1, o2);
+    };
+    System.out.println(comparator.compare(17, 22));
+
+    System.out.println("--------------------");
+    Comparator<Integer> com = (o1, o2) -> Integer.compare(o1, o2);
+    System.out.println(com.compare(21, 18));
+}
+```
+
+
+
+### 函数式(``Function``)接口
+
+> 接口只声明了一个抽象方法，可以通过Lambda表达式来创建该接口的对象
+
++ Java内置四大核心函数式接口
+
+| 函数式接口               | 参数类型 | 返回类型 | 用途                                                         |
+| ------------------------ | -------- | -------- | ------------------------------------------------------------ |
+| Consumer<T> 接口消费型    | T        | void     | 对类型为T的对象应用操作，包含方法：void accept(T t)          |
+| Supplier<T> 供给型接口 | 无       | T        | 返回类型为T的对象，包含方法：T get()                         |
+| Function<T, R> 函数型接口 | T        | R        | 对类型为T的对象应用操作，并返回结果，结果类型是R类型的对象，包含方法：R apply(T t) |
+| Predicate<T> 断定型接口  | T        | boolean  | 确定类型为T的对象是否满足某约束，并返回boolean值，包含方法：boolean test(T t) |
+
+```java
+/*************Consumer***************/
+public void test01() {
+    purchase(5500.0, new Consumer<Double>() {
+        @Override
+        public void accept(Double aDouble) {
+            System.out.println("iPhone12 :" + aDouble);
+        }
+    });
+
+    System.out.println("-----------Lambda------------");
+    purchase(6000, price -> {
+        System.out.println("iPhone12 Max : " + price);
+    });
+}
+public void purchase(double money, Consumer<Double> con) {
+    con.accept(money);
+}
+
+/*************Predicate**************/
+public void test02() {
+    List<String> list = Arrays.asList("上海", "北京", "深圳", "成都", "杭州", "重庆", "南京");
+    List<String> ans = filterString(list, new Predicate<String>() {
+        @Override
+        public boolean test(String s) {
+            return s.contains("京");
+        }
+    });
+    System.out.println(ans);
+
+    System.out.println("*********Lambda*********");
+    ans = filterString(list, s -> s.contains("都"));
+    System.out.println(ans);
+}
+//根据给定的规则，过滤集合中的字符串，规则由Predicate的方法决定
+public List<String> filterString(List<String> list, Predicate<String> pre) {
+    ArrayList<String> filterList = new ArrayList<>();
+    for (String s : list) {
+        if (pre.test(s)) {
+            filterList.add(s);
+        }
+    }
+    return filterList;
+}
+```
+
+
+
+
+
+
+
+### 方法引用与构造器引用
+
+
+
+
+
+### 强大的``Stream API``
+
+
+
+
+
+### ``Optional``类
 
