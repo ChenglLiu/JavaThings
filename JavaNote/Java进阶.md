@@ -1099,6 +1099,7 @@ for (Object obj : c) {
 > 元视图操作：
 
 ```java
+//添加元素：put(key, value)
 Map map = new HashMap();
 map.put("AA", 233);
 map.put(123, 777);
@@ -2808,11 +2809,181 @@ public List<String> filterString(List<String> list, Predicate<String> pre) {
 
 
 
-
-
-
-
 ### 方法引用与构造器引用
+
+> 方法引用使用的要求：接口中的抽象方法的形参列表和返回值类型与方法引用的方法的形参列表和返回值类型相同（情况一、二）
+
+#### 情况一：``对象 :: 实例方法``
+
+```java
+//Consumer<T> 中的 void accept(T t)
+//PrintStream 中的 void println(T t)
+public void test01() {
+    Consumer<String> consumer = str -> System.out.println("forever : " + str);
+    consumer.accept("教员");
+
+    System.out.println("-----------Method Reference----------");
+    PrintStream ps = System.out;
+    Consumer<String> con = ps::println;
+    con.accept("图书管理员");
+}
+
+//Supplier<T> 的 T get()
+//Person 中的 String getName()
+public void test02() {
+    Person person = new Person(23, "Plus");
+    Supplier<String> supplier = () -> person.getName();
+    System.out.println(supplier.get());
+
+    System.out.println("------------Normal Implements------------");
+    Supplier<Integer> sup = new Supplier<Integer>() {
+        @Override
+        public Integer get() {
+            return person.getAge();
+        }
+    };
+    System.out.println(sup.get());
+
+    System.out.println("-------------Method Reference-------------");
+    Supplier<String> supp = person::getName;
+    System.out.println(supp.get());
+    Suppler<Integer> suppl = person::getAge;
+    System.out.println(suppl.get());
+}
+```
+
+
+
+#### 情况二：``类 :: 静态方法``
+
+> 非静态方法
+
+```java
+//Comparator 中的 int compare(T t1, T t2)
+//Integer 中的 int compare(T t1, T t2)
+public void test03() {
+    Comparator<Integer> comparator = (t1, t2) -> -Integer.compare(t1, t2);
+    System.out.println(comparator.compare(12, 67));
+
+    System.out.println("-------------Method Reference------------");
+    Comparator<Integer> com = Integer::compare;
+    System.out.println(com.compare(23, 67));
+}
+
+//Function 中的 R apply(T t)
+//Math 中的 Long round(Double d)
+public void test04() {
+    System.out.println("----------Normal implements----------");
+    Function<Double, Long> function = new Function<Double, Long>() {
+        @Override
+        public Long apply(Double aDouble) {
+            return Math.round(aDouble);
+        }
+    };
+    System.out.println(function.apply(12.3456));
+
+    System.out.println("-----------Lambda expression------------");
+    Function<Double, Long> func = d -> Math.round(d);
+    System.out.println(function.apply(23.456));
+
+    System.out.println("-------------Method Reference-------------");
+    Function<Double, Long> fu = Math::round;
+    System.out.println(fu.apply(34.567));
+}
+```
+
+
+
+#### *情况三：``类 :: 实例方法``*
+
+> 非静态方法，形参列表不一致
+
+```java
+//Comparator 中的 int compare(T t1, T t2)
+//String 中的 int s1.compareTo(s2)
+public void test05() {
+    Comparator<String> co = (s1, s2) -> -s1.compareTo(s2);
+    System.out.println(co.compare("abb", "aab"));
+
+    System.out.println("-------------Method Reference-------------");
+    Comparator<String> comp = String::compareTo;
+    System.out.println(comp.compare("abb", "aab"));
+}
+
+//BiPredicate 中的 boolean test(T t1, T t2)
+//String 中的 boolean s1.equals(s2)
+public void test06() {
+    BiPredicate<String, String> biPredicate = (s1, s2) -> s1.equals(s2);
+    System.out.println(biPredicate.test("plus", "plus"));
+
+    System.out.println("-----------Method Reference-------------");
+    BiPredicate<String, String> predicate = String::equals;
+    System.out.println(predicate.test("aloha", "hello"));
+}
+
+//Function 中的 R apply(T t)
+//People 中的 String getName()
+public void test07() {
+    Function<Person, String> function = person -> person.getName();
+    String s = function.apply(new Person(23, "plus"));
+    System.out.println(s);
+
+    System.out.println("--------------Method Reference-------------");
+    Function<Person, Integer> func = Person::getAge;
+    System.out.println(func.apply(new Person(23, "plus")));
+}
+```
+
+
+
+#### 构造器引用
+
+```java
+@Test
+public void test01() {
+    Supplier<Person> supplier = new Supplier<Person>() {
+        @Override
+        public Person get() {
+            return new Person();
+        }
+    };
+    Person person = supplier.get();
+    System.out.println(person);     //Person{age=0, name='null'}
+
+    System.out.println("-------------Lambda expression-----------");
+    Supplier<Person> supp = () -> new Person();
+    Person person1 = supp.get();
+    person1.setAge(23);
+
+    System.out.println("------------Constructor Reference-----------");
+    Supplier<Person> su = Person::new;
+    Person person2 = su.get();
+    person2.setName("plus");
+}
+
+@Test
+public void test02() {
+    Function<Integer, Person> function = age -> new Person(age, "AlohaWorld...");
+    Person person = function.apply(23);
+    System.out.println(person);     //Person{age=23, name='AlohaWorld...'}
+
+    System.out.println("------------Constructor Reference-----------");
+    Function<Integer, Person> func = Person::new;
+    Person p = func.apply(23);
+    System.out.println(p);          //Person{age=23, name='null'}
+}
+
+@Test
+public void test03() {
+    BiFunction<Integer, String, Person> biFunction = (age, name) -> new Person(age, name);
+    Person person = biFunction.apply(23, "plus");
+    System.out.println(person);         //Person{age=23, name='plus'}
+
+    System.out.println("------------Constructor Reference------------");
+    BiFunction<Integer, String, Person> function = Person::new;
+    System.out.println(p);              //Person{age=22, name='Aloha'}
+}
+```
 
 
 

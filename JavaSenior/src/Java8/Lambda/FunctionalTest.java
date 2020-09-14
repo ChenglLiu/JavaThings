@@ -26,7 +26,7 @@ public class FunctionalTest {
         });
 
         System.out.println("-----------Lambda------------");
-        purchase(6000, price -> {
+        purchase(6000.0, price -> {
             System.out.println("iPhone12 Max : " + price);
         });
     }
