@@ -2,6 +2,7 @@ package Java8.Lambda;
 
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -57,5 +58,17 @@ public class ConstructorRefTest {
         BiFunction<Integer, String, Person> function = Person::new;
         Person p = function.apply(23, "Aloha");
         System.out.println(p);              //Person{age=22, name='Aloha'}
+    }
+
+    @Test
+    public void test04() {
+        Function<Integer, String[]> function = length -> new String[length];
+        String[] arr = function.apply(7);
+        System.out.println(Arrays.toString(arr));
+
+        System.out.println("---------------Constructor Reference----------------");
+        Function<Integer, String[]> func = String[]::new;
+        String[] strings = func.apply(8);
+        System.out.println(Arrays.toString(strings));
     }
 }

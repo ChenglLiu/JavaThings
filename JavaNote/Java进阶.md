@@ -2938,6 +2938,10 @@ public void test07() {
 
 #### 构造器引用
 
+> 和方法引用类似，函数式接口的抽象方法的形参列表和构造器的形参列表一致。
+>
+> 抽象方法的返回值类型即为构造器所属类的类型
+
 ```java
 @Test
 public void test01() {
@@ -2987,11 +2991,58 @@ public void test03() {
 
 
 
+#### 数组引用
+
+> 数组可以看作特殊的类，使用方法与构造器引用相似
+
+```java
+@Test
+//Function(R, T) 中的 R apply(T t)
+public void test04() {
+    Function<Integer, String[]> function = length -> new String[length];
+    String[] arr = function.apply(7);
+    System.out.println(Arrays.toString(arr));
+
+    System.out.println("------------Constructor Reference------------");
+    Function<Integer, String[]> func = String[]::new;
+    String[] strings = func.apply(8);
+    System.out.println(Arrays.toString(strings));
+}
+```
+
 
 
 ### 强大的``Stream API``
 
+> Java8中最重要的改变：``Lambda表达式``和``Stream API``
 
+#### 1）``Stream API``
+
++ ``java.util.stream``
+
++ 使用Stream API对集合数据进行操作，类似于使用SQL执行数据库查询
+
++ Stream：数据渠道，用于操作数据源（数组、集合等）所生成的元素序列
+
+  **注意：**
+
+  - Stream不会自己存储元素
+  - 不会改变源对象，相反，会返回一个持有结果的新Stream
+  - 操作是延时执行的，需要等到需要结果的时候才执行
+
+#### 2）操作步骤
+
++ 1-创建Stream
+
+  一个数据源（集合、数组等），获取一个流
+
++ 2-中间操作
+
+  一个中间操作链，对数据源的数据进行处理（映射、过滤...）
+
++ 3-终止操作(终端操作)
+
+  一旦执行操作，就执行中间操作链，并产生结果。*之后，便不会再被使用*
 
 
 
