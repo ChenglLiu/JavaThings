@@ -1,4 +1,4 @@
-package Java8.StreamAPI;
+package Java8Features.StreamAPI;
 
 import org.junit.Test;
 

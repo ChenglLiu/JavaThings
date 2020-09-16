@@ -1,4 +1,4 @@
-package Java8.Lambda;
+package Java8Features.Lambda;
 
 import org.junit.Test;
 
