@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Properties;
 
 /**
@@ -14,16 +15,18 @@ import java.util.Properties;
  **/
 
 public class JDBCUtils {
-    public static Connection getConnection() {
+    /**
+     * @author liuclo
+     * @Desciption 获取连接
+     * @Date  2020/9/20 16:00
+     **/
+    public static Connection getConnection() throws IOException, ClassNotFoundException, SQLException {
         //1. 读取配置信息
         InputStream resourceAsStream = ClassLoader.getSystemClassLoader().
                 getResourceAsStream("jdbc.properties");
+
         Properties properties = new Properties();
-        try {
-            properties.load(resourceAsStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        properties.load(resourceAsStream);
 
         String user = properties.getProperty("user");
         String password = properties.getProperty("password");
@@ -31,20 +34,35 @@ public class JDBCUtils {
         String driverClass = properties.getProperty("driverClass");
 
         //2. 加载驱动
+        Class.forName(driverClass);
+
+        //3. 获取连接
+        Connection connection = DriverManager.getConnection(url, user, password);
+
+        return connection;
+    }
+
+    /**
+     * @author liuclo
+     * @Desciption 资源关闭
+     * @Date  2020/9/22 23:12
+     **/
+    public static void closeResource(Connection connection, Statement statement) {
+        //PreparedStatement extends Statement
         try {
-            Class.forName(driverClass);
-        } catch (ClassNotFoundException e) {
+            if (statement != null) {
+                statement.close();
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        //3. 获取连接
-        Connection connection = null;
         try {
-            connection = DriverManager.getConnection(url, user, password);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-        return connection;
     }
 }
