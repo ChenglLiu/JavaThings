@@ -18,6 +18,43 @@ import java.util.Properties;
  **/
 
 public class PreparedStatementUpdateTest {
+    /**
+     * @author liuclo
+     * @Desciption 通用的增删改操作
+     * @Date  2020/9/23 20：34
+     **/
+    public void update(String sql, Object ...args) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            //1. 获取数据库连接
+            con = JDBCUtils.getConnection();
+
+            //2. 预编译sql语句，返回PreparedStatement实例
+            ps = con.prepareStatement(sql);
+
+            //3. 填充占位符
+            for (int i=0; i<args.length; i++) {
+                ps.setObject(i + 1, args[i]);
+            }
+
+            //4. 执行
+            ps.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            //5. 资源关闭
+            JDBCUtils.closeResource(con, ps);
+        }
+    }
+
+    /**
+     * @author liuclo
+     * @Desciption //TODO
+     * @Date  2020/9/23
+     **/
+
+
     //向departments表中添加一条记录
     @Test
     public void test01() {
@@ -53,7 +90,7 @@ public class PreparedStatementUpdateTest {
             ps.setInt(1, 300);
             ps.setString(2, "IT");
             ps.setInt(3, 108);
-            ps.setInt(4, 1700);
+            ps.setInt(4, 1800);
 
             //6. 执行sql操作
             ps.execute();
@@ -104,5 +141,14 @@ public class PreparedStatementUpdateTest {
             //5. 资源关闭
             JDBCUtils.closeResource(connection, preparedStatement);
         }
+    }
+
+    @Test
+    public void test03() {
+        String sql = "update departments set manager_id = ? where department_id = ?";
+        update(sql, 108, 300);
+
+        sql = "delete from departments where department_id = ?";
+        update(sql, 300);
     }
 }
