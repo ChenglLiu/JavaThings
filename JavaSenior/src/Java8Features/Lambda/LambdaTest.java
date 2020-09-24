@@ -50,8 +50,6 @@ public class LambdaTest {
             System.out.println(s);
         };
         c.accept("Hi......");
-
-
     }
 
     @Test

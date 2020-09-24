@@ -62,4 +62,36 @@ public class JDBCUtils {
             e.printStackTrace();
         }
     }
+
+    /**
+     * @author liuclo
+     * @Desciption 资源关闭
+     * @Date  2020/9/24 20:28
+     **/
+    public static void closeResource(Connection connection, Statement statement, ResultSet resultSet) {
+        //PreparedStatement extends Statement
+        try {
+            if (statement != null) {
+                statement.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            if (resultSet != null) {
+                resultSet.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
