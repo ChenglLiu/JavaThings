@@ -260,48 +260,41 @@ public class Test {
     > >
     > > 但这个字面量不超过 ``byte/short`` 的取值范围，那么可以直接复制给 ``byte/short``类型的变量
     > >
-    > > ```java
-    > > 
-    > > ```
   > > byte x = 127;			//ok
   > > byte y = 128;			//error
   > > long i = 214783647		//ok
   > > long j = 214783648		//error
   > > long j = 214783648L		//ok
-  > >
-  > > ```
-  > > 
-  > > ```
-  >
+  > 
   > float: 4字节
-  >
+  > 
   > double: 8字节
   >
   > > 字面量默认为 ``double`` 类型
-  > >
+  >>
   > > ```java
-  > > float i = 3.14;			//error
+  >> float i = 3.14;			//error
   > > double j = 3.1415936;
   > > float k = 3.14F;		//ok
   > > ```
-  >
+  > 
   > char: 2字节
-  >
+  > 
   > > ``byte char short``做混合运算时，均转换为 ``int`` 再做运算
-  > >
+  >>
   > > ```java
-  > > int i = 98;
+  >> int i = 98;
   > > short x = i;			//error
   > > short x1 = (short)i;	//ok
   > > short y = 98;			//ok
   > > ```
-  >
+  > 
   > boolean: 1bit
-  >
+  > 
   > > **不同于 ``C/C++`` 无法用 ``0 1`` 表示布尔类型**
   >
   > + 原码：
-  > + 反码：符号位变，数字位取反
+  >+ 反码：符号位变，数字位取反
   > + 补码：符号位不变，数字位取反加1
   
   - 转义字符
