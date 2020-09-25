@@ -657,7 +657,7 @@ public static void printMax(double... numbers) {
 + 构造器（构造方法），创建对象时必须调用的，构造器的**特点**
   - 与类名相同
   - 没有返回类型
-  - Ait + Ins键快速生成构造器
+  - Alt + Ins键快速生成构造器
 
 #### 封装
 
@@ -668,12 +668,15 @@ public static void printMax(double... numbers) {
 + 属性**私有**、不对外提供接口的方法
 + 提供公共的方法用以访问``get function()`` ``set function()``
 + ``private``
+  
   - 只有这个类内部可以访问
   - 类内部的成员函数和定义初始化
   - **这个限制是对类的**而不是对对象的
 + ``public``
-  - 
+  
+  
 + 没有``private``和``public``表示是``friendly``
+  
   - 同一个包内部可以访问
 
 #### 访问权限修饰符 
@@ -824,11 +827,8 @@ public static void printMax(double... numbers) {
     >
     > 6. 自定义类重写``equals()``，一般也是比较对象实体内容
     >
-    > ```java
-    > 
-    > ```
-    >
-    > 
+    
+    
 
 ##### **super**
 
@@ -1060,17 +1060,17 @@ public static void printMax(double... numbers) {
   >
   > ```java
   > public class Test {
-  >     final int WIDTH = 18;
-  >     final int LONG;
-  >     final int HEIGHT;
-  >     
-  >     {
-  >         HEIGHT = 18;
-  >     }
+  >        final int WIDTH = 18;
+  >        final int LONG;
+  >        final int HEIGHT;
+  >    
+  >        {
+  >            HEIGHT = 18;
+  >        }
   > 
-  >     public Test() {
-  >         LONG = 18;
-  >     }
+  >        public Test() {
+  >            LONG = 18;
+  >        }
   > }
   > ```
 
@@ -1094,8 +1094,8 @@ public static void printMax(double... numbers) {
   abstract class A {}
   ```
 
-  - 此类不能实例化
-  - 抽象类中一定要有构造器，便于子类实例化时调用（子类对象实例化的全过程）
+  - 此类**不能实例化**
+  - **抽象类中一定要有构造器**，便于子类实例化时调用（子类对象实例化的全过程）
 
 + 抽象方法
 
@@ -1214,7 +1214,7 @@ public class UserServiceImpl implements UserService, TimeService {
 }
 ```
 
-#### 
+
 
 ### 代理模式(Proxy)
 
@@ -1599,7 +1599,7 @@ catch (Exception e) {
 > ``Java``的``JVM``允许程序运行多个线程，通过``java.lang.Thread类``来实现
 
 ```java
-public class ThreadTest {
+public class ThreadTest01 {
     public static void main(String[] args) {
         //3. 创建子类对象
         MyThread mythread = new MyThread();
@@ -1851,10 +1851,10 @@ class Window implements Runnable {
 
 *说明：*
 
-+ ***``wait()、notify()、notifyAll()``只能出现在同步代码块或者同步方法中，即``synchronized(obj){}``中***
++ ***``wait()、notify()、notifyAll()``只能出现在同步代码块或者同步方法中，即 ``synchronized(obj){}``中***
 
-+ ***调用者必须是同步代码块或者同步方法中的同步监视器，也就是说``synchronized(obj)``中的同步监视器obj，那么调用者也必须是obj，否则会出现``IllegleMonitorStateException``***
-+ ***``wait()、notify()、notifyAll()``定义在``java.lang.Object类``中***
++ ***调用者必须是同步代码块或者同步方法中的同步监视器，也就是说 ``synchronized(obj)``中的同步监视器obj，那么调用者也必须是obj，否则会出现 ``IllegleMonitorStateException``***
++ ***``wait()、notify()、notifyAll()``定义在 ``java.lang.Object类``中***
 
 
 
@@ -2004,7 +2004,7 @@ System.out.println(s2 == s5);   	//true
 ##### 1）String--->包装类
 
 ```java
-int num = Integer.parseInt(str);
+int num = Integer.parseInt(str);	//自动拆箱
 String str = String.valueOf(num);
 ```
 
@@ -3762,7 +3762,7 @@ public static void Demo01() {
                        ", 完整类名：" + person.getClass().getName());
 }
 
-/*证所有的类都是Class类的实例对象*/
+/*所有的类都是Class类的实例对象*/
 public static void Demo02() throws ClassNotFoundException {
     /*定义两个未知类型的Class，并赋值为null*/
     Class<?> class1 = null;
