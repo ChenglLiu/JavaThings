@@ -8,7 +8,6 @@ public class InterfaceTest {
         Plane plane = new Plane();
         plane.fly();
         plane.stop();
-
     }
 }
 

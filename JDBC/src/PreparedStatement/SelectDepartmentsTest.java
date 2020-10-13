@@ -6,7 +6,9 @@ import org.junit.Test;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author liuclo
@@ -119,6 +121,55 @@ public class SelectDepartmentsTest {
             e.printStackTrace();
         } finally {
             JDBCUtils.closeResource(connection, ps, result);
+        }
+        return null;
+    }
+
+    /**
+     * @author liuclo
+     * @Desciption //通用表的查询方法
+     * @Date  2020/10/12 21:30
+     **/
+    public <T> List<T> getForList(Class<T> clazz, String sql, Object... args) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = JDBCUtils.getConnection();
+
+            ps = conn.prepareStatement(sql);
+            for (int i=0; i<args.length; i++) {
+                ps.setObject(i + 1, args[i]);
+            }
+
+            rs = ps.executeQuery();
+
+            //获取结果的元数据:ResultSetMeteData
+            ResultSetMetaData rsmd = rs.getMetaData();
+            //通过ResultSetMeteData获取结果集中的列数
+            int columnCount = rsmd.getColumnCount();
+
+            List<T> list = new ArrayList<>();
+            while (rs.next()) {
+                T t = clazz.newInstance();
+                //处理结果集一行数据的每一列
+                for (int i=0; i<columnCount; i++) {
+                    //获取列值
+                    Object columnValue = rs.getObject(i + 1);
+                    //获取列的别名
+                    String columnLabel = rsmd.getColumnLabel(i + 1);
+                    //给t对象指定的columnName属性，赋值为columnValue
+                    Field field = clazz.getDeclaredField(columnLabel);
+                    field.setAccessible(true);
+                    field.set(t, columnValue);
+                }
+                list.add(t);
+            }
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            JDBCUtils.closeResource(conn, ps, rs);
         }
         return null;
     }
