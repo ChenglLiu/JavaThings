@@ -1,4 +1,4 @@
-package InternetPrograming.TCP;
+package NetWorkPrograming.TCP;
 
 import org.junit.Test;
 
@@ -7,7 +7,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class TCPTest02 {
+public class ServerAndClient {
     //客户端
     @Test
     public void client() {

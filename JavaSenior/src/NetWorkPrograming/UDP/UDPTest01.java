@@ -1,4 +1,4 @@
-package InternetPrograming.UDP;
+package NetWorkPrograming.UDP;
 
 import org.junit.Test;
 

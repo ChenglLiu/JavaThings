@@ -1,4 +1,4 @@
-package InternetPrograming.TCP;
+package NetWorkPrograming.TCP;
 
 import org.junit.Test;
 
@@ -10,15 +10,13 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import static java.net.Socket.*;
-
 /**
  * @Description 实现TCP的网络编程
  * @author liucl
  * @date 2020/8/25 10:55
  */
 
-public class TCPTset {
+public class ClientAndServer {
     //客户端
     @Test
     public void client() {

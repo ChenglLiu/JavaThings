@@ -1,4 +1,4 @@
-package Abstraction.Example05;
+package Abstraction.Example01;
 
 public abstract class Employee {
     String name;

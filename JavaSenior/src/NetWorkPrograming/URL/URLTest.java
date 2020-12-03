@@ -1,4 +1,4 @@
-package InternetPrograming.URL;
+package NetWorkPrograming.URL;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 
 public class URLTest {
     public static void main(String[] args) {

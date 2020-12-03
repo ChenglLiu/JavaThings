@@ -1,4 +1,4 @@
-package Abstraction.Example05;
+package Abstraction.Example01;
 
 public class Manager extends Employee {
     private double bonus;
