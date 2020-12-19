@@ -53,4 +53,24 @@
         <url-pattern>/down</url-pattern>
     </servlet-mapping>
 
+    <!-- 注册servlet -->
+    <servlet>
+        <servlet-name>image</servlet-name>
+        <servlet-class>com.liuclo.servlet.ImageServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>image</servlet-name>
+        <url-pattern>/image</url-pattern>
+    </servlet-mapping>
+
+    <!-- 注册servlet -->
+    <servlet>
+        <servlet-name>redirect</servlet-name>
+        <servlet-class>com.liuclo.servlet.RedirectServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>redirect</servlet-name>
+        <url-pattern>/redirect</url-pattern>
+    </servlet-mapping>
+
 </web-app>
