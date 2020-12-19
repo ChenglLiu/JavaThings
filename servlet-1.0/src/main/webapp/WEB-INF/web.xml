@@ -73,4 +73,25 @@
         <url-pattern>/redirect</url-pattern>
     </servlet-mapping>
 
+    <!-- 注册servlet -->
+    <servlet>
+        <servlet-name>request</servlet-name>
+        <servlet-class>com.liuclo.servlet.RequestServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>request</servlet-name>
+        <url-pattern>/login</url-pattern>
+    </servlet-mapping>
+
+    <!-- 注册servlet -->
+    <servlet>
+        <servlet-name>cookie</servlet-name>
+        <servlet-class>com.liuclo.servlet.CookieServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>cookie</servlet-name>
+        <url-pattern>/cookie</url-pattern>
+    </servlet-mapping>
+
+
 </web-app>
