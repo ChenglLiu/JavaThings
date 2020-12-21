@@ -10,9 +10,12 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>servlet-1.0</module>
+        <module>jsp-2.0</module>
+        <module>filter-3.0</module>
     </modules>
 
     <dependencies>
+        <!-- servlet依赖 -->
         <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -20,6 +23,7 @@
             <version>4.0.1</version>
         </dependency>
 
+        <!-- jsp依赖 -->
         <!-- https://mvnrepository.com/artifact/javax.servlet.jsp/javax.servlet.jsp-api -->
         <dependency>
             <groupId>javax.servlet.jsp</groupId>

@@ -28,3 +28,4 @@ target/
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 /servlet-1.0/target/
+/filter-3.0/src/test/
