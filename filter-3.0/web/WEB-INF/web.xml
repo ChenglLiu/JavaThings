@@ -28,4 +28,34 @@
         <!-- 只要是/servlet下的任何请求 均将经过过滤器 -->
         <url-pattern>/servlet/*</url-pattern>
     </filter-mapping>
+
+    <!-- 注册监听器 -->
+    <listener>
+        <listener-class>com.liuclo.listener.OnlineCountListener</listener-class>
+    </listener>
+
+    <!-- session 1min 自动注销 -->
+    <session-config>
+        <session-timeout>1</session-timeout>
+    </session-config>
+
+    <!-- 注册servlet -->
+    <servlet>
+        <servlet-name>login</servlet-name>
+        <servlet-class>com.liuclo.servlet.LoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>login</servlet-name>
+        <url-pattern>/servlet/login</url-pattern>
+    </servlet-mapping>
+
+    <!-- 注册servlet -->
+    <servlet>
+        <servlet-name>logout</servlet-name>
+        <servlet-class>com.liuclo.servlet.LogoutServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>logout</servlet-name>
+        <url-pattern>/servlet/logout</url-pattern>
+    </servlet-mapping>
 </web-app>

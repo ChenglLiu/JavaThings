@@ -11,6 +11,10 @@
     <title>$Title$</title>
   </head>
   <body>
-  $END$
+    <h2>
+      当前有
+      <span style="color: pink"><%=this.getServletConfig().getServletContext().getAttribute("count")%></span>
+      人在线
+    </h2>
   </body>
 </html>
