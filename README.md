@@ -216,7 +216,7 @@ public class Test {
 
 ### 变量
 
-#### 0. 字面量
+#### 1. 字面量
 
 + 整数型字面量
 + 浮点型字面量
@@ -224,7 +224,7 @@ public class Test {
 + 字符型字面量
 + 字符串型字面量
 
-#### 1. 变量
+#### 2. 变量
 
 + 数据类型、变量名、数值
 
@@ -673,7 +673,6 @@ public static void printMax(double... numbers) {
   - 类内部的成员函数和定义初始化
   - **这个限制是对类的**而不是对对象的
 + ``public``
-  
   
 + 没有``private``和``public``表示是``friendly``
   
